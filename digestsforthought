@@ -1,0 +1,85 @@
+#!/usr/bin/env python
+
+import os
+import twitter
+from sparkpost import SparkPost
+import random
+
+twitter_consumer_key=os.environ.get('TWITTER_CONSUMER_KEY')
+twitter_consumer_secret=os.environ.get('TWITTER_CONSUMER_SECRET')
+twitter_access_token_key=os.environ.get('TWITTER_ACCESS_TOKEN_KEY')
+twitter_access_token_secret=os.environ.get('TWITTER_ACCESS_TOKEN_SECRET')
+
+sparkpost_api_key=os.environ.get('SPARKPOST_API_KEY')
+
+# XXX: how do I ship an app with this consumer key+secret so no-one can decode them?
+api = twitter.Api(consumer_key=twitter_consumer_key,
+                  consumer_secret=twitter_consumer_secret,
+                  access_token_key=twitter_access_token_key,
+                  access_token_secret=twitter_access_token_secret)
+
+sp = SparkPost(sparkpost_api_key)
+
+#print(api.VerifyCredentials())
+
+# Nicer formatting (w/ images?) for tweets
+# XXX: Config file
+# XXX: Allow retweets to be skipped?
+# Also Zen_Moments
+screen_names=['BBCNews']
+fetch_per_user=50
+select_per_user=3
+results=[]
+
+for screen_name in screen_names:
+    chosen=[]
+    name=''
+    statuses = api.GetUserTimeline(screen_name=screen_name, count=fetch_per_user)
+    for i in range(0, select_per_user):
+        # XXX: Don't allow duplicates
+        s = random.choice(statuses)
+        #print(s)
+        name = s.user.name
+        chosen.append(s)
+
+    results.append({ 'screen_name': screen_name, 'name': name, 'chosen': chosen })
+
+# XXX: Datestamp in subject
+subject='Digests for Thought: Random tweets'
+
+text='\n'
+html='''
+<html>
+<head><title>%s</title></head>
+<body>
+''' % (subject)
+
+for r in results:
+    text += "%s (%s)\n\n" % (r['screen_name'], r['name'])
+    html += "<p><b>@%s (%s)</b></p>\n" % (r['screen_name'], r['name'])
+    html += "<p><ul>\n"
+
+    for s in r['chosen']:
+        # XXX: Eat whitespace in text
+        link = "https://twitter.com/%s/status/%s" % (s.user.screen_name, s.id_str)
+        text += " * %s [ %s ]\n" % (s.text, link)
+        html += '<li>%s [ <a href="%s">View tweet</a> ]</li>\n' % (s.text, link)
+
+    text += '\n'
+    html += '</ul></p>\n'
+
+html += '''
+</body>
+</html>
+'''
+
+response = sp.transmissions.send(
+    recipients=['recipient@somewhere.example'],
+    from_email='sender@somewhere.example',
+    subject=subject,
+    text=text,
+    html=html
+)
+# Convert this into success/failure
+print(response)
+
