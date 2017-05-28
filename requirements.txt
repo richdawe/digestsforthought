@@ -1,3 +1,2 @@
 python-twitter
 sparkpost
-boto3

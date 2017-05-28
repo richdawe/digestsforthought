@@ -1,4 +1,11 @@
 {
+  "twitter_consumer_key": "GOES-HERE",
+  "twitter_consumer_secret": "GOES-HERE",
+  "twitter_access_token_key": "GOES-HERE",
+  "twitter_access_token_secret": "GOES-HERE",
+
+  "sparkpost_api_key": "GOES-HERE",
+
   "screen_names": [ "BBCNews" ],
   "fetch_per_user": 50,
   "select_per_user": 3,
