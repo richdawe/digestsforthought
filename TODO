@@ -1,5 +1,6 @@
  * Figure out how to pick up credentials
  * Get it going in AWS Lambda -- daily
  * Sort out XXXes in script
- * Configuration for sending and recipient addresses
  * How do I encode Twitter app consumer info in program?
+ * Disable link tracking for text links, because it does not format well
+ * Pick up tweet config from an S3 bucket?

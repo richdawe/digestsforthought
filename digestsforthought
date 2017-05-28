@@ -4,6 +4,7 @@ import os
 import twitter
 from sparkpost import SparkPost
 import random
+import json
 
 twitter_consumer_key=os.environ.get('TWITTER_CONSUMER_KEY')
 twitter_consumer_secret=os.environ.get('TWITTER_CONSUMER_SECRET')
@@ -22,64 +23,78 @@ sp = SparkPost(sparkpost_api_key)
 
 #print(api.VerifyCredentials())
 
-# Nicer formatting (w/ images?) for tweets
-# XXX: Config file
 # XXX: Allow retweets to be skipped?
-# Also Zen_Moments
-screen_names=['BBCNews']
-fetch_per_user=50
-select_per_user=3
-results=[]
+def FetchTweets(config):
+    results=[]
 
-for screen_name in screen_names:
-    chosen=[]
-    name=''
-    statuses = api.GetUserTimeline(screen_name=screen_name, count=fetch_per_user)
-    for i in range(0, select_per_user):
-        # XXX: Don't allow duplicates
-        s = random.choice(statuses)
-        #print(s)
-        name = s.user.name
-        chosen.append(s)
+    for screen_name in config['screen_names']:
+        chosen=[]
+        name=''
+        statuses = api.GetUserTimeline(screen_name=screen_name, count=config['fetch_per_user'])
+        for i in range(0, config['select_per_user']):
+            # XXX: Don't allow duplicates
+            s = random.choice(statuses)
+            #print(s)
+            name = s.user.name
+            chosen.append(s)
 
-    results.append({ 'screen_name': screen_name, 'name': name, 'chosen': chosen })
+        results.append({ 'screen_name': screen_name, 'name': name, 'chosen': chosen })
 
-# XXX: Datestamp in subject
-subject='Digests for Thought: Random tweets'
+    return results
 
-text='\n'
-html='''
+# XXX: Nicer formatting (w/ images?) for tweets
+def FormatTweets(config, results):
+    # XXX: Datestamp in subject
+    subject='Digests for Thought: Random tweets'
+
+    text='\n'
+    html='''
 <html>
 <head><title>%s</title></head>
 <body>
 ''' % (subject)
 
-for r in results:
-    text += "%s (%s)\n\n" % (r['screen_name'], r['name'])
-    html += "<p><b>@%s (%s)</b></p>\n" % (r['screen_name'], r['name'])
-    html += "<p><ul>\n"
+    for r in results:
+        text += "%s (%s)\n\n" % (r['screen_name'], r['name'])
+        html += "<p><b>@%s (%s)</b></p>\n" % (r['screen_name'], r['name'])
+        html += "<p><ul>\n"
 
-    for s in r['chosen']:
-        # XXX: Eat whitespace in text
-        link = "https://twitter.com/%s/status/%s" % (s.user.screen_name, s.id_str)
-        text += " * %s [ %s ]\n" % (s.text, link)
-        html += '<li>%s [ <a href="%s">View tweet</a> ]</li>\n' % (s.text, link)
+        for s in r['chosen']:
+            # XXX: Eat whitespace in text
+            link = "https://twitter.com/%s/status/%s" % (s.user.screen_name, s.id_str)
+            text += " * %s [ %s ]\n" % (s.text, link)
+            html += '<li>%s [ <a href="%s">View tweet</a> ]</li>\n' % (s.text, link)
 
-    text += '\n'
-    html += '</ul></p>\n'
+        text += '\n'
+        html += '</ul></p>\n'
 
-html += '''
+    html += '''
 </body>
 </html>
 '''
 
-response = sp.transmissions.send(
-    recipients=['recipient@somewhere.example'],
-    from_email='sender@somewhere.example',
-    subject=subject,
-    text=text,
-    html=html
-)
-# Convert this into success/failure
-print(response)
+    return { 'subject': subject, 'text': text, 'html': html }
+
+def FetchConfig():
+    configfile = open("config.json")
+    return json.load(configfile)
+
+def handler(event, context):
+    config = FetchConfig()
+    results = FetchTweets(config)
+    formatted = FormatTweets(config, results)
+
+    response = sp.transmissions.send(
+        recipients=config['recipients'],
+        from_email=config['sender'],
+        subject=formatted['subject'],
+        text=formatted['text'],
+        html=formatted['html']
+    )
+
+    # Convert this into success/failure
+    print(response)
+
+if __name__ == "__main__":
+    handler(None, None)
 

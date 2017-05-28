@@ -1,3 +1,10 @@
+config.json
+digestsforthought.zip
+digestsforthought.zip.bak
+digestsforthought.tar
+digestsforthought.tar.bak
+_zipbuild
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
