@@ -78,7 +78,11 @@ def FormatTweets(config, results):
         for s in r['chosen']:
             # XXX: Eat whitespace in text
             link = "https://twitter.com/%s/status/%s" % (s.user.screen_name, s.id_str)
-            text += " * %s [ %s ]\n" % (s.text, link)
+            # Click tracking is really distracting for links in the text part,
+            # so disable click tracking. Also, use a pipe separator
+            # to work around an apparent bug where link-attr seems to be ignored
+            # in the link parser: "[ link[[link-attr]] ]" doesn't seem to work.
+            text += " * %s | %s[[data-msys-clicktrack=\"0\"]]\n" % (s.text, link)
             html += '<li>%s [ <a href="%s">View tweet</a> ]</li>\n' % (s.text, link)
 
         text += '\n'

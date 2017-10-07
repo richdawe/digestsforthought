@@ -2,5 +2,5 @@
  * Get it going in AWS Lambda -- daily
  * Sort out XXXes in script
  * How do I encode Twitter app consumer info in program?
- * Disable link tracking for text links, because it does not format well
  * Pick up tweet config from an S3 bucket?
+ * Reduce execution time by calling Twitter APIs in parallel where possible
