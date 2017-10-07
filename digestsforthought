@@ -44,16 +44,9 @@ def FetchTweets(config):
     results=[]
 
     for screen_name in config['screen_names']:
-        chosen=[]
         name=''
         statuses = api.GetUserTimeline(screen_name=screen_name, count=config['fetch_per_user'])
-        for i in range(0, config['select_per_user']):
-            # XXX: Don't allow duplicates
-            s = random.choice(statuses)
-            #print(s)
-            name = s.user.name
-            chosen.append(s)
-
+        chosen = random.sample(statuses, config['select_per_user'])
         results.append({ 'screen_name': screen_name, 'name': name, 'chosen': chosen })
 
     return results
@@ -113,6 +106,10 @@ def FormatMessages(config, tweets, motds):
 </body>
 </html>
 '''
+
+    if config['debug']:
+        print(text)
+        print(html)
 
     return { 'subject': subject, 'text': text, 'html': html }
 

@@ -11,5 +11,7 @@
   "select_per_user": 3,
 
   "sender": "sender@somewhere.example",
-  "recipients": [ "recipient@somewhere.example" ]
+  "recipients": [ "recipient@somewhere.example" ],
+
+  "debug": false
 }
