@@ -58,8 +58,25 @@ def FetchTweets(config):
 
     return results
 
+# Some choice messages of the day
+def FetchMOTDs():
+    # Source: https://en.wikipedia.org/wiki/Fallacies_of_distributed_computing
+    networkFallacies = [
+        "1. The network is reliable.",
+        "2 Latency is zero.",
+        "3. Bandwidth is infinite.",
+        "4. The network is secure.",
+        "5. Topology doesn't change.",
+        "6. There is one administrator.",
+        "7. Transport cost is zero.",
+        "8. The network is homogeneous.",
+    ]
+    return {
+        "Fallacy of Distributed Computing": random.choice(networkFallacies)
+    }
+
 # XXX: Nicer formatting (w/ images?) for tweets
-def FormatTweets(config, results):
+def FormatMessages(config, tweets, motds):
     # XXX: Datestamp in subject
     subject='Digests for Thought: Random tweets'
 
@@ -70,7 +87,11 @@ def FormatTweets(config, results):
 <body>
 ''' % (subject)
 
-    for r in results:
+    for m in motds:
+        text += "%s: %s\n\n" % (m, motds[m])
+        html += "<p><b>%s:</b> %s</p>\n\n" % (m, motds[m])
+
+    for r in tweets:
         text += "%s (%s)\n\n" % (r['screen_name'], r['name'])
         html += "<p><b>@%s (%s)</b></p>\n" % (r['screen_name'], r['name'])
         html += "<p><ul>\n"
@@ -97,8 +118,9 @@ def FormatTweets(config, results):
 
 def handler(event, context):
     config = FetchConfig()
-    results = FetchTweets(config)
-    formatted = FormatTweets(config, results)
+    tweets = FetchTweets(config)
+    motds = FetchMOTDs()
+    formatted = FormatMessages(config, tweets, motds)
 
     response = sp.transmissions.send(
         recipients=config['recipients'],
