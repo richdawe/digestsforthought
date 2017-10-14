@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import os
+import time
 import twitter
 from sparkpost import SparkPost
 import random
@@ -58,12 +59,15 @@ def FetchTweets(config):
     results=[]
 
     for screen_name in config['screen_names']:
-        # XXX: Fetch user name from API
         user = api.GetUser(screen_name=screen_name)
-        name = user.name
         statuses = api.GetUserTimeline(screen_name=screen_name, count=config['fetch_per_user'])
         chosen = random.sample(statuses, config['select_per_user'])
-        results.append({ 'screen_name': screen_name, 'name': name, 'chosen': chosen })
+        results.append({
+            'screen_name': screen_name,
+            'name': user.name,
+            'image_url': user.profile_image_url,
+            'chosen': chosen
+        })
 
     return results
 
@@ -84,10 +88,15 @@ def FetchMOTDs():
         "Fallacy of Distributed Computing": random.choice(networkFallacies)
     }
 
-# XXX: Nicer formatting (w/ images?) for tweets
+# XXX: Nicer formatting for tweets:
+#
+# - Box around each user's tweet
+# - Image on left
+# - Tweets on right aligned w/ top of image
+#
 def FormatMessages(config, tweets, motds):
-    # XXX: Datestamp in subject
-    subject='Digests for Thought: Random tweets'
+    datestamp=time.strftime("%a %d %b")
+    subject='Digests for Thought for %s' % (datestamp)
 
     text='\n'
     html='''
@@ -102,18 +111,18 @@ def FormatMessages(config, tweets, motds):
 
     for r in tweets:
         text += "%s (%s)\n\n" % (r['screen_name'], r['name'])
-        html += "<p><b>@%s (%s)</b></p>\n" % (r['screen_name'], r['name'])
+        html += "<p><img src=\"%s\">&nbsp;<b>@%s (%s)</b></p>\n" % (r['image_url'], r['screen_name'], r['name'])
         html += "<p><ul>\n"
 
         for s in r['chosen']:
-            # XXX: Eat whitespace in text
+            stripped_text = s.text.strip()
             link = "https://twitter.com/%s/status/%s" % (s.user.screen_name, s.id_str)
             # Click tracking is really distracting for links in the text part,
             # so disable click tracking. Also, use a pipe separator
             # to work around an apparent bug where link-attr seems to be ignored
             # in the link parser: "[ link[[link-attr]] ]" doesn't seem to work.
-            text += " * %s | %s[[data-msys-clicktrack=\"0\"]]\n" % (s.text, link)
-            html += '<li>%s [ <a href="%s">View tweet</a> ]</li>\n' % (s.text, link)
+            text += " * %s | %s[[data-msys-clicktrack=\"0\"]]\n" % (stripped_text, link)
+            html += '<li>%s [ <a href="%s">View tweet</a> ]</li>\n' % (stripped_text, link)
 
         text += '\n'
         html += '</ul></p>\n'
