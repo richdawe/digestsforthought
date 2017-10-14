@@ -49,6 +49,12 @@ TODO: Note that the commands below fail because cloudformation does not support
 the Zipfile property on Lambda. Need to upload the CFN template and ZIP
 to S3, then use them in CFN template.
 
+TODO: Parameterise bucket name, since they need to be globally unique
+
+    aws s3 mb s3://digestsforthought
+    aws s3 cp cfn/digestsforthought.yaml s3://digestsforthought
+    aws s3 cp digestsforthought.zip s3://digestsforthought
+
     aws cloudformation create-stack --stack-name digestsforthought2 --template-body "$(cat cfn/digestsforthought.yaml)" --parameters ParameterKey=FunctionName,ParameterValue=digestsforthought2 --capabilities CAPABILITY_IAM
     aws cloudformation wait stack-create-complete --stack-name digestsforthought2
 

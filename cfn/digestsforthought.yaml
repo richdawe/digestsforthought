@@ -2,13 +2,16 @@
 # Used https://github.com/awslabs/aws-cidr-finder/blob/master/cfn/cidr-findr.yaml
 # as an example to get started.
 
+# XXX: Parameterise S3 bits
+# XXX: Create Lambda test event to trigger it (timed one)
+
 Parameters:
   FunctionName:
     Description: Name of the lambda function
     Type: String
 
 Resources:
-  Role:
+  LambdaRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -20,19 +23,50 @@ Resources:
           Action: ["sts:AssumeRole"]
       Path: "/service-role/"
 
-  Function:
+  LambdaFunction:
     Type: AWS::Lambda::Function
     Properties:
       FunctionName: !Ref FunctionName
+      Description: Twitter digests via e-mail
       Code:
-        Zipfile: digestsforthought.zip
+        S3Bucket: digestsforthought
+        S3Key: digestsforthought.zip
       Handler: digestsforthought.handler
-      Role: !GetAtt [Role, Arn]
+      Role: !GetAtt [LambdaRole, Arn]
       Runtime: python2.7
+      Timeout: 15
+
+  # Based on example from https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html
+  ScheduledRule:
+    Type: "AWS::Events::Rule"
+    Properties:
+      Name: !Ref FunctionName
+      Description: "Twitter digests daily"
+      ScheduleExpression: "cron(0 5 ? * * *)"
+      State: "ENABLED"
+      Targets:
+        -
+          Arn:
+            Fn::GetAtt:
+              - "LambdaFunction"
+              - "Arn"
+          Id: "TargetFunctionV1"
+
+  PermissionForEventsToInvokeLambda:
+    Type: "AWS::Lambda::Permission"
+    Properties:
+      FunctionName:
+        Ref: "LambdaFunction"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn:
+        Fn::GetAtt:
+          - "ScheduledRule"
+          - "Arn"
 
 Outputs:
   FunctionArn:
-    Value: !GetAtt [Function, Arn]
+    Value: !GetAtt [LambdaFunction, Arn]
     Export:
-      Name: digestsforthought
+      Name: !Ref FunctionName
 
