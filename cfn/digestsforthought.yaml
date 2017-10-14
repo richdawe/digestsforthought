@@ -1,0 +1,38 @@
+
+# Used https://github.com/awslabs/aws-cidr-finder/blob/master/cfn/cidr-findr.yaml
+# as an example to get started.
+
+Parameters:
+  FunctionName:
+    Description: Name of the lambda function
+    Type: String
+
+Resources:
+  Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service: [lambda.amazonaws.com]
+          Action: ["sts:AssumeRole"]
+      Path: "/service-role/"
+
+  Function:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: !Ref FunctionName
+      Code:
+        Zipfile: digestsforthought.zip
+      Handler: digestsforthought.handler
+      Role: !GetAtt [Role, Arn]
+      Runtime: python2.7
+
+Outputs:
+  FunctionArn:
+    Value: !GetAtt [Function, Arn]
+    Export:
+      Name: digestsforthought
+

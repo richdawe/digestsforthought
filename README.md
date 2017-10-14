@@ -45,6 +45,13 @@ You may find it useful for chosing some tweets to read at breakfast.
 
 TODO
 
+TODO: Note that the commands below fail because cloudformation does not support
+the Zipfile property on Lambda. Need to upload the CFN template and ZIP
+to S3, then use them in CFN template.
+
+    aws cloudformation create-stack --stack-name digestsforthought2 --template-body "$(cat cfn/digestsforthought.yaml)" --parameters ParameterKey=FunctionName,ParameterValue=digestsforthought2 --capabilities CAPABILITY_IAM
+    aws cloudformation wait stack-create-complete --stack-name digestsforthought2
+
 # Licence
 
 Copyright 2017 Richard Dawe
