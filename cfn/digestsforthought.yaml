@@ -3,7 +3,6 @@
 # as an example to get started.
 
 # XXX: Parameterise S3 bits
-# XXX: Create Lambda test event to trigger it (timed one)
 
 Parameters:
   FunctionName:

@@ -1,5 +1,4 @@
  * Figure out how to pick up credentials
- * CloudFormation set up instructions
  * Sort out XXXes in script
  * How do I encode Twitter app consumer info in program?
  * Pick up tweet config from an S3 bucket?

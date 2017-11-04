@@ -58,6 +58,8 @@ TODO: Parameterise bucket name, since they need to be globally unique
     aws cloudformation create-stack --stack-name digestsforthought2 --template-body "$(cat cfn/digestsforthought.yaml)" --parameters ParameterKey=FunctionName,ParameterValue=digestsforthought2 --capabilities CAPABILITY_IAM
     aws cloudformation wait stack-create-complete --stack-name digestsforthought2
 
+    aws cloudformation update-stack --stack-name digestsforthought2 --template-body "$(cat cfn/digestsforthought.yaml)" --parameters ParameterKey=FunctionName,ParameterValue=digestsforthought2 --capabilities CAPABILITY_IAM
+
 # Licence
 
 Copyright 2017 Richard Dawe
