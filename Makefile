@@ -34,26 +34,33 @@ stack-uuid:
 	(echo -n digestsforthought- && uuidgen -r | cut -f 5 -d -) > $@
 	chmod a-w $@
 
-# XXX: Need to create S3 buckets too
+# XXX: Can we create the S3 bucket and upload the file via CFN?
 deploy:	digestsforthought.zip stack-uuid
 	stack=$$(cat stack-uuid); \
+		aws s3 mb s3://$$stack ; \
+		aws s3 cp digestsforthought.zip s3://$$stack ; \
 		aws cloudformation create-stack --stack-name $$stack --template-body "$$(cat cfn/digestsforthought.yaml)" \
-			--parameters ParameterKey=FunctionName,ParameterValue=$$stack --capabilities CAPABILITY_IAM ; \
+			--parameters ParameterKey=FunctionName,ParameterValue=$$stack ParameterKey=S3Bucket,ParameterValue=$$stack \
+			--capabilities CAPABILITY_IAM ; \
 		aws cloudformation wait stack-create-complete --stack-name $$stack
 
-redeploy:	stack-uuid
+redeploy:	digestsforthought.zip stack-uuid
 	stack=$$(cat stack-uuid); \
+		aws s3 cp digestsforthought.zip s3://$$stack ; \
 		aws cloudformation update-stack --stack-name $$stack --template-body "$$(cat cfn/digestsforthought.yaml)" \
-			--parameters ParameterKey=FunctionName,ParameterValue=$$stack --capabilities CAPABILITY_IAM ; \
+			--parameters ParameterKey=FunctionName,ParameterValue=$$stack ParameterKey=S3Bucket,ParameterValue=$$stack \
+			--capabilities CAPABILITY_IAM ; \
 		aws cloudformation wait stack-update-complete --stack-name $$stack
 
 invoke:	stack-uuid
 	stack=$$(cat stack-uuid); \
-	      aws lambda invoke --function-name $$stack $$stack-invoke.log; \
+	      aws lambda invoke --function-name $$stack $$stack-invoke.log ; \
 	      echo; cat $$stack-invoke.log; echo; rm $$stack-invoke.log
 
 destroy:	stack-uuid
 	stack=$$(cat stack-uuid); \
-		aws cloudformation delete-stack --stack-name $$stack; \
-		aws cloudformation wait stack-delete-complete --stack-name $$stack
+		aws cloudformation delete-stack --stack-name $$stack ; \
+		aws cloudformation wait stack-delete-complete --stack-name $$stack ; \
+		aws s3 rb s3://$$stack
+
 
