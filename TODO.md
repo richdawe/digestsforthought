@@ -1,6 +1,7 @@
  * Fetch from Twitter lists?
  * Figure out how to pick up credentials
  * Sort out XXXes in script
+ * Work out how to stop tweets being truncated (...)
  * How do I encode Twitter app consumer info in program?
  * Pick up tweet config from an S3 bucket?
  * Reduce execution time by calling Twitter APIs in parallel where possible

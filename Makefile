@@ -52,8 +52,6 @@ redeploy-stack:	digestsforthought.zip stack-uuid
 			--capabilities CAPABILITY_IAM && \
 		aws cloudformation wait stack-update-complete --stack-name $$stack
 
-# XXX: Why doesn't this work? Seems to result in Lambda that can't run
-# because it can't find the handler?
 redeploy:	digestsforthought.zip stack-uuid
 	stack=$$(cat stack-uuid); \
 		aws s3 cp digestsforthought.zip s3://$$stack ; \
