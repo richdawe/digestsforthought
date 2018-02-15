@@ -5,5 +5,7 @@
  * Pick up tweet config from an S3 bucket?
  * Reduce execution time by calling Twitter APIs in parallel where possible
  * Add X- header with mailer information?
+ * Use AWS SAM for Cloudformation
+ * Enable Cloudwatch logs for Lambda
  * Use heml.io templates for responsive mail?
  * Allow use with Azure, Google Cloud, fn project
