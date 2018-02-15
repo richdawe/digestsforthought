@@ -35,22 +35,30 @@ stack-uuid:
 	chmod a-w $@
 
 # XXX: Can we create the S3 bucket and upload the file via CFN?
-deploy:	digestsforthought.zip stack-uuid
+deploy-stack:	digestsforthought.zip stack-uuid
 	stack=$$(cat stack-uuid); \
 		aws s3 mb s3://$$stack ; \
 		aws s3 cp digestsforthought.zip s3://$$stack ; \
 		aws cloudformation create-stack --stack-name $$stack --template-body "$$(cat cfn/digestsforthought.yaml)" \
 			--parameters ParameterKey=FunctionName,ParameterValue=$$stack ParameterKey=S3Bucket,ParameterValue=$$stack \
-			--capabilities CAPABILITY_IAM ; \
+			--capabilities CAPABILITY_IAM && \
 		aws cloudformation wait stack-create-complete --stack-name $$stack
 
-redeploy:	digestsforthought.zip stack-uuid
+redeploy-stack:	digestsforthought.zip stack-uuid
 	stack=$$(cat stack-uuid); \
 		aws s3 cp digestsforthought.zip s3://$$stack ; \
 		aws cloudformation update-stack --stack-name $$stack --template-body "$$(cat cfn/digestsforthought.yaml)" \
 			--parameters ParameterKey=FunctionName,ParameterValue=$$stack ParameterKey=S3Bucket,ParameterValue=$$stack \
-			--capabilities CAPABILITY_IAM ; \
+			--capabilities CAPABILITY_IAM && \
 		aws cloudformation wait stack-update-complete --stack-name $$stack
+
+# XXX: Why doesn't this work? Seems to result in Lambda that can't run
+# because it can't find the handler?
+redeploy:	digestsforthought.zip stack-uuid
+	stack=$$(cat stack-uuid); \
+		aws s3 cp digestsforthought.zip s3://$$stack ; \
+		aws lambda update-function-code --function-name $$stack \
+			--s3-bucket $$stack --s3-key digestsforthought.zip
 
 invoke:	stack-uuid
 	stack=$$(cat stack-uuid); \
