@@ -2,13 +2,19 @@ default:	digestsforthought.zip
 
 ## BUILD
 #
-# This requires a Python virtual environment. See README.md.
+# This uses a Python virtual environment.
+# If you want to test locally, you'll also need a Python virtualenv --
+# see README.md.
+#
+# XXX: Can we pass the Python version in when building the venv?
+# That needs to be consistent with the version used in the lambda.
 #
 digestsforthought.tar:	digestsforthought requirements.txt config.json
-	test -d '$(VIRTUAL_ENV)' || (echo; echo "ERROR: Please set up a virtualenv"; echo; false)
+	rm -fv _venv
+	./build-in-venv _venv
 	if [ -f $@ ]; then mv -f $@ $@.bak; fi
 	tar -c -v -f $@ $^
-	tar -r -v -f $@ -C $(VIRTUAL_ENV)/lib/python*/site-packages .
+	tar -r -v -f $@ -C _venv/lib/python*/site-packages .
 
 digestsforthought.zip:	digestsforthought.tar
 	if [ -f $@ ]; then mv -f $@ $@.bak; fi
