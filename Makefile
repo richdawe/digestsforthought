@@ -10,7 +10,7 @@ default:	digestsforthought.zip
 # That needs to be consistent with the version used in the lambda.
 #
 digestsforthought.tar:	digestsforthought requirements.txt config.json
-	rm -fv _venv
+	rm -rfv _venv
 	./build-in-venv _venv
 	if [ -f $@ ]; then mv -f $@ $@.bak; fi
 	tar -c -v -f $@ $^
