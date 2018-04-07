@@ -48,7 +48,8 @@ sparkpost_api_key=config["sparkpost_api_key"]
 api = twitter.Api(consumer_key=twitter_consumer_key,
                   consumer_secret=twitter_consumer_secret,
                   access_token_key=twitter_access_token_key,
-                  access_token_secret=twitter_access_token_secret)
+                  access_token_secret=twitter_access_token_secret,
+                  tweet_mode='extended')
 
 sp = SparkPost(sparkpost_api_key)
 
@@ -115,7 +116,7 @@ def FormatMessages(config, tweets, motds):
         html += "<p><ul>\n"
 
         for s in r['chosen']:
-            stripped_text = s.text.strip()
+            stripped_text = s.full_text.strip()
             link = "https://twitter.com/%s/status/%s" % (s.user.screen_name, s.id_str)
             # Click tracking is really distracting for links in the text part,
             # so disable click tracking. Also, use a pipe separator
