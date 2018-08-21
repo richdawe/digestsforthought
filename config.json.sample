@@ -6,7 +6,7 @@
 
   "sparkpost_api_key": "GOES-HERE",
 
-  "screen_names": [ "BBCNews" ],
+  "screen_names": [ "BBCNews", "PapersWeLoveLdn", "adriancolyer" ],
   "fetch_per_user": 50,
   "select_per_user": 3,
 
