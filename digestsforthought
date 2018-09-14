@@ -62,13 +62,17 @@ def FetchTweets(config):
     for screen_name in config['screen_names']:
         user = api.GetUser(screen_name=screen_name)
         statuses = api.GetUserTimeline(screen_name=screen_name, count=config['fetch_per_user'])
-        chosen = random.sample(statuses, config['select_per_user'])
-        results.append({
-            'screen_name': screen_name,
-            'name': user.name,
-            'image_url': user.profile_image_url,
-            'chosen': chosen
-        })
+        sample_size = config['select_per_user']
+        if sample_size > len(statuses):
+            sample_size = len(statuses)
+        if sample_size > 0:
+            chosen = random.sample(statuses, sample_size)
+            results.append({
+                'screen_name': screen_name,
+                'name': user.name,
+                'image_url': user.profile_image_url,
+                'chosen': chosen
+            })
 
     return results
 
