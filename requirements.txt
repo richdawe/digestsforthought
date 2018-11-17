@@ -1,2 +1,2 @@
 python-twitter
-sparkpost
+git+https://github.com/SparkPost/python-sparkpost@master#egg=sparkpost

@@ -32,6 +32,10 @@ You may find it useful for chosing some tweets to read at breakfast.
     source ~/Envs/digestsforthought/bin/activate
     pip install -r requirements.txt
 
+You will need to install the AWS cli into your virtualenv too:
+
+    pip install awscli
+
 # Configure
 
     cp config.json.sample config.json
