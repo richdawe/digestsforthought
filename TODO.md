@@ -1,4 +1,7 @@
+ * Support SparkPost EU
+ * Include random distributed system definition like linearizability, etc.
  * Fetch from Twitter lists?
+ * Include a random bookmarked tweet?
  * Figure out how to pick up credentials
  * Sort out XXXes in script
  * Work out how to stop tweets being truncated (...)
