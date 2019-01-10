@@ -43,9 +43,7 @@ twitter_access_token_key=config["twitter_access_token_key"]
 twitter_access_token_secret=config["twitter_access_token_secret"]
 
 sparkpost_api_key=config["sparkpost_api_key"]
-sparkpost_base_uri=config["sparkpost_base_uri"]
-if sparkpost_base_uri is None:
-    sparkpost_base_uri='https://api.sparkpost.com'
+sparkpost_base_uri=config.get("sparkpost_base_uri", 'https://api.sparkpost.com') # SparkPost US by default
 
 # XXX: how do I ship an app with this consumer key+secret so no-one can decode them?
 api = twitter.Api(consumer_key=twitter_consumer_key,
