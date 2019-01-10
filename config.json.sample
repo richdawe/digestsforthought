@@ -5,6 +5,7 @@
   "twitter_access_token_secret": "GOES-HERE",
 
   "sparkpost_api_key": "GOES-HERE",
+  "sparkpost_base_uri": "OPTIONAL, USE THIS FOR SparkPost EU: https://api.eu.sparkpost.com",
 
   "screen_names": [ "BBCNews", "PapersWeLoveLdn", "adriancolyer" ],
   "fetch_per_user": 50,

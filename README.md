@@ -41,6 +41,10 @@ You will need to install the AWS cli into your virtualenv too:
     cp config.json.sample config.json
     # Edit config.json
 
+digestsforthought defaults to using SparkPost US. If you would like to use SparkPost EU, make sure that your `config.json` file contains the following line:
+
+    "sparkpost_base_uri": "https://api.eu.sparkpost.com",
+
 # Run:
 
     ./digestsforthought
