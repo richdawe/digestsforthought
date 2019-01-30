@@ -1,3 +1,5 @@
+ * Switch to Python 3.x
+ * Switch to Pipfile
  * Include random distributed system definition like linearizability, etc.
  * Fetch from Twitter lists?
  * Include a random bookmarked tweet?
