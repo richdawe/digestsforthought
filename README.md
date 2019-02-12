@@ -27,14 +27,16 @@ You may find it useful for chosing some tweets to read at breakfast.
 
 # Build
 
-    mkdir -p ~/Envs/digestsforthought
-    virtualenv ~/Envs/digestsforthought
-    source ~/Envs/digestsforthought/bin/activate
-    pip install -r requirements.txt
+This project is managed using [Pipenv](https://pipenv.readthedocs.io/en/latest/). You will likely need to [install Pipenv](https://pipenv.readthedocs.io/en/latest/install/#installing-pipenv) first.
 
-You will need to install the AWS cli into your virtualenv too:
+Once pipenv is installed, you can install all the pre-requisites and start a shell in a Python virtualenv using the following steps. The Python virtualenv makes development easier by using a version of Python set up with all the pre-requiste modules and tools:
 
-    pip install awscli
+```
+pipenv install --dev
+pipenv shell
+```
+
+The pipenv setup includes the AWS command-line tool. If you exit the pipenv shell, you can always restart it using `pipenv shell`.
 
 # Configure
 
@@ -70,7 +72,7 @@ TODO: Parameterise bucket name, since they need to be globally unique
 
 # Licence
 
-Copyright 2017 Richard Dawe
+Copyright 2017-2019 Richard Dawe
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

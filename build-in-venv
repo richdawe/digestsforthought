@@ -9,6 +9,12 @@ if [ ! -d "$DESTDIR" ]; then
   mkdir $DESTDIR
 fi
 
-virtualenv $DESTDIR
+virtualenv -p $(which python) $DESTDIR
 source $DESTDIR/bin/activate
-pip install -r requirements.txt
+
+# See issue #2705: "How to generate a zip file with deps for AWS Lambda"
+# <https://github.com/pypa/pipenv/issues/2705>
+pip install pipenv
+pipenv lock -r > build-in-venv.txt
+pip install -r build-in-venv.txt
+rm -f build-in-venv.txt

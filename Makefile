@@ -9,7 +9,9 @@ default:	digestsforthought.zip
 # XXX: Can we pass the Python version in when building the venv?
 # That needs to be consistent with the version used in the lambda.
 #
-digestsforthought.tar:	digestsforthought requirements.txt config.json
+digestsforthought.tar:	\
+		Pipfile Pipfile.lock build-in-venv \
+		digestsforthought config.json
 	rm -rfv _venv
 	./build-in-venv _venv
 	if [ -f $@ ]; then mv -f $@ $@.bak; fi
@@ -27,6 +29,8 @@ digestsforthought.zip:	digestsforthought.tar
 clean:
 	rm -f digestsforthought.tar digestsforthought.tar.bak
 	rm -f digestsforthought.zip digestsforthought.zip.bak
+	rm -rfv _venv
+	rm -fv build-in-venv.txt
 
 realclean:	clean
 	rm -f stack-uuid
@@ -45,7 +49,7 @@ deploy-stack:	digestsforthought.zip stack-uuid
 	stack=$$(cat stack-uuid); \
 		aws s3 mb s3://$$stack ; \
 		aws s3 cp digestsforthought.zip s3://$$stack ; \
-		aws cloudformation create-stack --stack-name $$stack --template-body "$$(cat cfn/digestsforthought.yaml)" \
+		aws cloudformation create-stack --stack-name $$stack --template-body file://./cfn/digestsforthought.yaml \
 			--parameters ParameterKey=FunctionName,ParameterValue=$$stack ParameterKey=S3Bucket,ParameterValue=$$stack \
 			--capabilities CAPABILITY_IAM && \
 		aws cloudformation wait stack-create-complete --stack-name $$stack
@@ -53,7 +57,7 @@ deploy-stack:	digestsforthought.zip stack-uuid
 redeploy-stack:	digestsforthought.zip stack-uuid
 	stack=$$(cat stack-uuid); \
 		aws s3 cp digestsforthought.zip s3://$$stack ; \
-		aws cloudformation update-stack --stack-name $$stack --template-body "$$(cat cfn/digestsforthought.yaml)" \
+		aws cloudformation update-stack --stack-name $$stack --template-body file://./cfn/digestsforthought.yaml \
 			--parameters ParameterKey=FunctionName,ParameterValue=$$stack ParameterKey=S3Bucket,ParameterValue=$$stack \
 			--capabilities CAPABILITY_IAM && \
 		aws cloudformation wait stack-update-complete --stack-name $$stack

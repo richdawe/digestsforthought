@@ -6,6 +6,7 @@ digestsforthought.tar.bak
 stack-uuid
 _zipbuild
 _venv
+build-in-venv.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
