@@ -1,3 +1,8 @@
+ * Fix this error:
+
+Missing permissions
+Your function doesn't have permission to write to Amazon CloudWatch Logs. To view logs, add the AWSLambdaBasicExecutionRole managed policy to its execution role. Open the IAM console
+
  * Include random distributed system definition like linearizability, etc.
  * Fetch from Twitter lists?
  * Include a random bookmarked tweet?
@@ -14,3 +19,4 @@
  * Enable Cloudwatch logs for Lambda
  * Use heml.io templates for responsive mail?
  * Allow use with Azure, Google Cloud, fn project
+ * Get API keys, etc. from AWS SSM
