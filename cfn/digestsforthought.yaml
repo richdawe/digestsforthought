@@ -33,7 +33,7 @@ Resources:
         S3Key: digestsforthought.zip
       Handler: digestsforthought.handler
       Role: !GetAtt [LambdaRole, Arn]
-      Runtime: python3.6
+      Runtime: python3.8
       Timeout: 60
 
   # Based on example from https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-events-rule.html
