@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2017-2019 Richard Dawe
+# Copyright 2017-2020 Richard Dawe
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -61,7 +61,16 @@ def FetchTweets(config):
     results=[]
 
     for screen_name in config['screen_names']:
-        user = api.GetUser(screen_name=screen_name)
+        try:
+            user = api.GetUser(screen_name=screen_name)
+        except twitter.error.TwitterError as err:
+            # XXX: Actually include this in the list of tweets,
+            # but with the error that meant we couldn't fetch the user
+            # (e.g.: account suspended).
+            # TwitterError like "Unable to fetch user REDACTED: [{'code': 63, 'message': 'User has been suspended.'}]
+            print("Unable to fetch user {}: {}".format(screen_name, err.message))
+            continue
+
         statuses = api.GetUserTimeline(screen_name=screen_name, count=config['fetch_per_user'])
         sample_size = config['select_per_user']
         if sample_size > len(statuses):
