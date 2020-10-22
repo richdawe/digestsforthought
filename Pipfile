@@ -11,4 +11,6 @@ python-twitter = "*"
 sparkpost = {git = "https://github.com/SparkPost/python-sparkpost",ref = "master"}
 
 [requires]
-python_version = "3.6"
+# It's not possible to specify a minimum version of Python 3.x here.
+# See <https://stackoverflow.com/questions/51492423/pipenv-specify-minimum-version-of-python-in-pipfile>
+#python_version = "3.6"

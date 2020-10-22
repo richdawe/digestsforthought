@@ -32,7 +32,7 @@ This project is managed using [Pipenv](https://pipenv.readthedocs.io/en/latest/)
 Once pipenv is installed, you can install all the pre-requisites and start a shell in a Python virtualenv using the following steps. The Python virtualenv makes development easier by using a version of Python set up with all the pre-requiste modules and tools:
 
 ```
-pipenv install --dev
+pipenv install --dev --python /usr/bin/python3
 pipenv shell
 ```
 
@@ -72,7 +72,7 @@ TODO: Parameterise bucket name, since they need to be globally unique
 
 # Licence
 
-Copyright 2017-2019 Richard Dawe
+Copyright 2017-2020 Richard Dawe
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
