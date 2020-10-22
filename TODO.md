@@ -7,7 +7,11 @@ Your function doesn't have permission to write to Amazon CloudWatch Logs. To vie
  * Fetch from Twitter lists?
  * Include a random bookmarked tweet?
  * Include a random user's bio
- * Use HEML
+ * Screenshot in README.md
+ * Thumbnails for images in tweets
+ * Include AMP part
+ *- If there's an image, include a thumbnail, and allow click to make it fullscreen.
+ * Use heml.io templates for responsive mail?
  * Figure out how to pick up credentials
  * Sort out XXXes in script
  * Work out how to stop tweets being truncated (...)
@@ -17,6 +21,5 @@ Your function doesn't have permission to write to Amazon CloudWatch Logs. To vie
  * Add X- header with mailer information?
  * Use AWS SAM for Cloudformation
  * Enable Cloudwatch logs for Lambda
- * Use heml.io templates for responsive mail?
  * Allow use with Azure, Google Cloud, fn project
  * Get API keys, etc. from AWS SSM
