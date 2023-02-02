@@ -11,6 +11,7 @@ Your function doesn't have permission to write to Amazon CloudWatch Logs. To vie
  * Thumbnails for images in tweets
  * Include AMP part
  *- If there's an image, include a thumbnail, and allow click to make it fullscreen.
+ * https://developers.google.com/gmail/design/css
  * Use heml.io templates for responsive mail?
  * Figure out how to pick up credentials
  * Sort out XXXes in script
