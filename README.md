@@ -1,3 +1,12 @@
+# THIS PROJECT IS NO LONGER MAINTAINED!
+
+This is for a couple of reasons:
+
+1. The free level of developer account access does not provide any API access for reading tweets. 100 USD/month to read a few tweets makes no economic sense.
+2. The python-twitter library does not support the Twitter v2 API.
+
+Unfortunately this project is no longer viable, and it has been abandoned.
+
 # Introduction
 
 digestsforthought is a small app to send an e-mail
